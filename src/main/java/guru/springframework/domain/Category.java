@@ -1,12 +1,18 @@
 package guru.springframework.domain;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.List;
 import java.util.Set;
 
+@Document
 public class Category {
 
+    @Id
     private String id;
     private String description;
-    private Set<Recipe> recipes;
+    private List<Recipe> recipes;
 
     public String getId() {
         return id;
@@ -24,11 +30,11 @@ public class Category {
         this.description = description;
     }
 
-    public Set<Recipe> getRecipes() {
+    public List<Recipe> getRecipes() {
         return recipes;
     }
 
-    public void setRecipes(Set<Recipe> recipes) {
+    public void setRecipes(List<Recipe> recipes) {
         this.recipes = recipes;
     }
 }

@@ -11,9 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class RecipeServiceImpl implements RecipeService {
@@ -29,9 +27,9 @@ public class RecipeServiceImpl implements RecipeService {
         this.recipeToRecipeCommand = recipeToRecipeCommand;
     }
 
-    public Set<Recipe> getRecipes() {
+    public List<Recipe> getRecipes() {
         Iterable<Recipe> iterableRecipes = recipeRepository.findAll();
-        Set<Recipe> recipes = new HashSet<>();
+        List<Recipe> recipes = new ArrayList<>();
         iterableRecipes.forEach(recipes::add);
         return recipes;
     }

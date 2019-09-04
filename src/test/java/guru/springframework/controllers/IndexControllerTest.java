@@ -11,7 +11,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -40,7 +42,7 @@ public class IndexControllerTest {
     public void testGetIndexPage() {
 
         // given
-        Set<Recipe> recipes = new HashSet<>();
+        List<Recipe> recipes = new ArrayList<>();
         Recipe recipe1 = new Recipe();
         Recipe recipe2 = new Recipe();
         recipe2.setDescription("Hello");
@@ -50,7 +52,7 @@ public class IndexControllerTest {
         // when
         when(recipeService.getRecipes()).thenReturn(recipes);
 
-        ArgumentCaptor<Set<Recipe>> argumentCaptor = ArgumentCaptor.forClass(Set.class);
+        ArgumentCaptor<List<Recipe>> argumentCaptor = ArgumentCaptor.forClass(List.class);
 
         String viewName = controller.getIndexPage(model);
 
@@ -58,7 +60,7 @@ public class IndexControllerTest {
         assertEquals("index", viewName);
         verify(recipeService, times(1)).getRecipes();
         verify(model, times(1)).addAttribute(eq("recipes"), argumentCaptor.capture());
-        Set<Recipe> setInController = argumentCaptor.getValue();
+        List<Recipe> setInController = argumentCaptor.getValue();
         assertEquals(2, setInController.size());
     }
 

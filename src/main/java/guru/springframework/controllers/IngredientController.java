@@ -80,7 +80,7 @@ public class IngredientController {
 
     @PostMapping
     @RequestMapping("recipe/{recipeId}/ingredient")
-    public String saveOrUpdate(@ModelAttribute IngredientCommand command) {
+    public String saveOrUpdate(@PathVariable String recipeId, @ModelAttribute IngredientCommand command) {
         IngredientCommand savedCommand = ingredientService.saveIngredientCommand(command);
 
         log.debug(String.format("saved recipe id: %s", savedCommand.getRecipeId()));

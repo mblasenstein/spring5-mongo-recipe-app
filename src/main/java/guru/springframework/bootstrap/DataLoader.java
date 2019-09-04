@@ -5,6 +5,8 @@ import guru.springframework.repositories.CategoryRepository;
 import guru.springframework.repositories.NotesRepository;
 import guru.springframework.repositories.RecipeRepository;
 import guru.springframework.repositories.UnitOfMeasureRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -23,6 +25,7 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
     private NotesRepository notesRepository;
     private UnitOfMeasureRepository unitOfMeasureRepository;
     private Map<String, UnitOfMeasure> unitsOfMeasure = new HashMap<>();
+    private static Logger log = LoggerFactory.getLogger(DataLoader.class);
 
     public DataLoader(RecipeRepository recipeRepository, CategoryRepository categoryRepository, NotesRepository notesRepository, UnitOfMeasureRepository unitOfMeasureRepository) {
         this.recipeRepository = recipeRepository;
@@ -33,10 +36,65 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
 
     @Override
         public void onApplicationEvent(ContextRefreshedEvent event) {
+        loadCategories();
+        loadUom();
         recipeRepository.save(loadGuacamoleRecipe());
         recipeRepository.save(loadTacoRecipe());
+        log.debug("Loading Bootstrap data");
     }
 
+    private void loadCategories(){
+        Category cat1 = new Category();
+        cat1.setDescription("American");
+        categoryRepository.save(cat1);
+
+        Category cat2 = new Category();
+        cat2.setDescription("Italian");
+        categoryRepository.save(cat2);
+
+        Category cat3 = new Category();
+        cat3.setDescription("Mexican");
+        categoryRepository.save(cat3);
+
+        Category cat4 = new Category();
+        cat4.setDescription("Fast Food");
+        categoryRepository.save(cat4);
+    }
+
+    private void loadUom(){
+        UnitOfMeasure uom1 = new UnitOfMeasure();
+        uom1.setDescription("Teaspoon");
+        unitOfMeasureRepository.save(uom1);
+
+        UnitOfMeasure uom2 = new UnitOfMeasure();
+        uom2.setDescription("Tablespoon");
+        unitOfMeasureRepository.save(uom2);
+
+        UnitOfMeasure uom3 = new UnitOfMeasure();
+        uom3.setDescription("Cup");
+        unitOfMeasureRepository.save(uom3);
+
+        UnitOfMeasure uom4 = new UnitOfMeasure();
+        uom4.setDescription("Pinch");
+        unitOfMeasureRepository.save(uom4);
+
+        UnitOfMeasure uom5 = new UnitOfMeasure();
+        uom5.setDescription("Ounce");
+        unitOfMeasureRepository.save(uom5);
+
+        UnitOfMeasure uom6 = new UnitOfMeasure();
+        uom6.setDescription("Each");
+        unitOfMeasureRepository.save(uom6);
+
+        UnitOfMeasure uom7 = new UnitOfMeasure();
+        uom7.setDescription("Pint");
+        unitOfMeasureRepository.save(uom7);
+
+        UnitOfMeasure uom8 = new UnitOfMeasure();
+        uom8.setDescription("Dash");
+        unitOfMeasureRepository.save(uom8);
+    }
+    
     private UnitOfMeasure getUom(String description) {
         if (unitsOfMeasure.size() == 0) {
             Iterable<UnitOfMeasure> uoms = unitOfMeasureRepository.findAll();
@@ -55,56 +113,48 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
         avocados.setAmount(BigDecimal.valueOf(2));
         avocados.setUom(getUom("Each"));
         avocados.setDescription("avocados");
-        avocados.setRecipe(recipe);
         recipe.getIngredients().add(avocados);
         
         Ingredient salt = new Ingredient();
         salt.setAmount(BigDecimal.valueOf(.5));
         salt.setUom(getUom("Teaspoon"));
         salt.setDescription("kosher salt");
-        salt.setRecipe(recipe);
         recipe.getIngredients().add(salt);
         
         Ingredient juice = new Ingredient();
         juice.setAmount(BigDecimal.valueOf(1));
         juice.setUom(getUom("Tablespoon"));
         juice.setDescription("fresh lime or lemon juice");
-        juice.setRecipe(recipe);
         recipe.getIngredients().add(juice);
         
         Ingredient onion = new Ingredient();
         onion.setAmount(BigDecimal.valueOf(2));
         onion.setUom(getUom("Tablespoon"));
         onion.setDescription("minced red onion or thinly sliced green onion");
-        onion.setRecipe(recipe);
         recipe.getIngredients().add(onion);
 
         Ingredient chiles = new Ingredient();
         chiles.setAmount(BigDecimal.valueOf(1));
         chiles.setUom(getUom("Each"));
         chiles.setDescription("serrano chiles, stems and seeds removed, minced");
-        chiles.setRecipe(recipe);
         recipe.getIngredients().add(chiles);
         
         Ingredient cilantro = new Ingredient();
         cilantro.setAmount(BigDecimal.valueOf(2));
         cilantro.setUom(getUom("Tablespoon"));
         cilantro.setDescription("cilantro (leaves and tender stems), finely chopped");
-        cilantro.setRecipe(recipe);
         recipe.getIngredients().add(cilantro);
         
         Ingredient pepper = new Ingredient();
         pepper.setAmount(BigDecimal.valueOf(1));
         pepper.setUom(getUom("Dash"));
         pepper.setDescription("freshly ground pepper");
-        pepper.setRecipe(recipe);
         recipe.getIngredients().add(pepper);
         
         Ingredient tomato = new Ingredient();
         tomato.setAmount(BigDecimal.valueOf(.5));
         tomato.setUom(getUom("Each"));
         tomato.setDescription("tomato, seeds and pulp removed, chopped");
-        tomato.setRecipe(recipe);
         recipe.getIngredients().add(tomato);
         
         recipe.setDirections(
@@ -137,7 +187,6 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
         notes.setRecipeNotes(
                 "Be careful handling chiles if using. Wash your hands thoroughly after handling and do not touch your "
                 + "eyes or the area near your eyes with your hands for several hours");
-        notes.setRecipe(recipe);
         recipe.setNotes(notes);
 
         Category mexican = categoryRepository.findByDescription("Mexican").get();
@@ -161,133 +210,114 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
         chiliPowder.setAmount(BigDecimal.valueOf(2));
         chiliPowder.setUom(getUom("Tablespoon"));
         chiliPowder.setDescription("ancho chili powder");
-        chiliPowder.setRecipe(recipe);
         recipe.getIngredients().add(chiliPowder);
         
         Ingredient oregano = new Ingredient();
         oregano.setAmount(BigDecimal.valueOf(1));
         oregano.setUom(getUom("Teaspoon"));
         oregano.setDescription("dried oregano");
-        oregano.setRecipe(recipe);
         recipe.getIngredients().add(oregano);
         
         Ingredient cumin = new Ingredient();
         cumin.setAmount(BigDecimal.valueOf(1));
         cumin.setUom(getUom("Teaspoon"));
         cumin.setDescription("dried cumin");
-        cumin.setRecipe(recipe);
         recipe.getIngredients().add(cumin);
 
         Ingredient sugar = new Ingredient();
         sugar.setAmount(BigDecimal.valueOf(1));
         sugar.setUom(getUom("Teaspoon"));
         sugar.setDescription("sugar");
-        sugar.setRecipe(recipe);
         recipe.getIngredients().add(sugar);
         
         Ingredient salt = new Ingredient();
         salt.setAmount(BigDecimal.valueOf(.5));
         salt.setUom(getUom("Teaspoon"));
         salt.setDescription("salt");
-        salt.setRecipe(recipe);
         recipe.getIngredients().add(salt);
 
         Ingredient garlic = new Ingredient();
         garlic.setAmount(BigDecimal.valueOf(1));
         garlic.setUom(getUom("Clove"));
         garlic.setDescription("garlic, finely chopped");
-        garlic.setRecipe(recipe);
         recipe.getIngredients().add(garlic);
 
         Ingredient zest = new Ingredient();
         zest.setAmount(BigDecimal.valueOf(1));
         zest.setUom(getUom("Tablespoon"));
         zest.setDescription("finely grated orange zest");
-        zest.setRecipe(recipe);
         recipe.getIngredients().add(zest);
 
         Ingredient juice = new Ingredient();
         juice.setAmount(BigDecimal.valueOf(3));
         juice.setUom(getUom("Tablespoon"));
         juice.setDescription("fresh-squeezed orange juice");
-        juice.setRecipe(recipe);
         recipe.getIngredients().add(juice);
 
         Ingredient oliveOil = new Ingredient();
         oliveOil.setAmount(BigDecimal.valueOf(2));
         oliveOil.setUom(getUom("Tablespoon"));
         oliveOil.setDescription("olive oil");
-        oliveOil.setRecipe(recipe);
         recipe.getIngredients().add(oliveOil);
 
         Ingredient chicken = new Ingredient();
         chicken.setAmount(BigDecimal.valueOf(6));
         chicken.setUom(getUom("Each"));
         chicken.setDescription("skinless, boneless chicken thighs");
-        chicken.setRecipe(recipe);
         recipe.getIngredients().add(chicken);
 
         Ingredient tortillas = new Ingredient();
         tortillas.setAmount(BigDecimal.valueOf(8));
         tortillas.setUom(getUom("Each"));
         tortillas.setDescription("small corn tortillas");
-        tortillas.setRecipe(recipe);
         recipe.getIngredients().add(tortillas);
 
         Ingredient arugula = new Ingredient();
         arugula.setAmount(BigDecimal.valueOf(3));
         arugula.setUom(getUom("Cup"));
         arugula.setDescription("packed baby arugula");
-        arugula.setRecipe(recipe);
         recipe.getIngredients().add(arugula);
 
         Ingredient avocados = new Ingredient();
         avocados.setAmount(BigDecimal.valueOf(2));
         avocados.setUom(getUom("Each"));
         avocados.setDescription("medium ripe avocados, sliced");
-        avocados.setRecipe(recipe);
         recipe.getIngredients().add(avocados);
 
         Ingredient radishes = new Ingredient();
         radishes.setAmount(BigDecimal.valueOf(4));
         radishes.setUom(getUom("Each"));
         radishes.setDescription("thinly sliced");
-        radishes.setRecipe(recipe);
         recipe.getIngredients().add(radishes);
 
         Ingredient cherryTomatoes = new Ingredient();
         cherryTomatoes.setAmount(BigDecimal.valueOf(.5));
         cherryTomatoes.setUom(getUom("Pint"));
         cherryTomatoes.setDescription("cherry tomatoes, halved");
-        cherryTomatoes.setRecipe(recipe);
         recipe.getIngredients().add(cherryTomatoes);
 
         Ingredient redOnion = new Ingredient();
         redOnion.setAmount(BigDecimal.valueOf(.25));
         redOnion.setUom(getUom("Each"));
         redOnion.setDescription("red onion, thinly sliced");
-        redOnion.setRecipe(recipe);
         recipe.getIngredients().add(redOnion);
 
         Ingredient cilantro = new Ingredient();
         cilantro.setAmount(BigDecimal.valueOf(1));
         cilantro.setUom(getUom("Each"));
         cilantro.setDescription("Roughly chopped cilantro");
-        cilantro.setRecipe(recipe);
         recipe.getIngredients().add(cilantro);
         
         Ingredient sourCream = new Ingredient();
         sourCream.setAmount(BigDecimal.valueOf(.5));
         sourCream.setUom(getUom("Cup"));
         sourCream.setDescription("sour cream");
-        sourCream.setRecipe(recipe);
         recipe.getIngredients().add(sourCream);
 
         Ingredient lime = new Ingredient();
         lime.setAmount(BigDecimal.valueOf(1));
         lime.setUom(getUom("Each"));
         lime.setDescription("lime");
-        lime.setRecipe(recipe);
         recipe.getIngredients().add(lime);
 
         recipe.setDirections(

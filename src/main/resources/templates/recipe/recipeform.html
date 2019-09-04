@@ -17,7 +17,6 @@
     </script>
 </head>
 <body>
-<!--/*@thymesVar id="recipe" type="guru.springframework.domain.Recipe"*/-->
 <div class="container-fluid" style="margin-top: 20px">
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
@@ -28,7 +27,7 @@
                 </div>
 
                 <input type="hidden" th:field="*{id}"/>
-                <div class="pannel-group">
+                <div class="panel-group">
                     <div class="panel panel-primary">
                         <div class="panel-heading">
                             <h1 class="panel-title">Edit Recipe Information</h1>
@@ -50,20 +49,20 @@
                                 <div class="col-md-3 form-group">
                                     <label>Categories:</label>
                                 </div>
-                                <div class="col-md-9 form-group">
-                                    <div class="radio">
-                                        <label>
-                                            <input type="checkbox" value=""/>
-                                            Cat 1
-                                        </label>
-                                    </div>
-                                    <div class="radio" th:remove="all">
-                                        <label>
-                                            <input type="checkbox" value=""/>
-                                            Cat 2
-                                        </label>
-                                    </div>
-                                </div>
+<!--                                <div class="col-md-9 form-group">-->
+<!--                                    <div class="radio">-->
+<!--                                        <label>-->
+<!--                                            <input type="checkbox" value=""/>-->
+<!--                                            Cat 1-->
+<!--                                        </label>-->
+<!--                                    </div>-->
+<!--                                    <div class="radio" th:remove="all">-->
+<!--                                        <label>-->
+<!--                                            <input type="checkbox" value=""/>-->
+<!--                                            Cat 2-->
+<!--                                        </label>-->
+<!--                                    </div>-->
+<!--                                </div>-->
                             </div>
                             <div class="row">
                                 <div class="col-md-3 form-group" th:class="${#fields.hasErrors('prepTime')}
@@ -152,15 +151,23 @@
                                         <li th:remove="all">asdf</li>
                                         <li th:each="ingredient : ${recipe.ingredients}"
                                             th:text="${(ingredient.getAmount() +
-                                        ' ' + ingredient.unitOfMeasure.description +
+                                        ' ' + (ingredient.unitOfMeasure != null ? ingredient.unitOfMeasure.description : '') +
                                         ' - ' + ingredient.getDescription())}">1 Teaspoon of Sugar
                                         </li>
                                     </ul>
+                                    <div th:each="ingredientEach, idx : ${recipe.ingredients}">
+                                        <input type="hidden" th:field="*{ingredients[__${idx.index}__].id}"/>
+                                        <input type="hidden" th:field="*{ingredients[__${idx.index}__].description}"/>
+                                        <input type="hidden" th:field="*{ingredients[__${idx.index}__].amount}"/>
+                                        <input type="hidden" th:field="*{ingredients[__${idx.index}__].unitOfMeasure.id}"/>
+                                    </div>
+<!--                                    <div th:if="${recipe.categories != null}" th:each="catEach, idx : ${recipe.categories}">-->
+<!--                                        <input type="hidden" th:field="*{categories[__${idx.index}__].id}"/>-->
+<!--                                    </div>-->
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="panel panel-primary">
+
                         <div class="panel-heading">
                             <h1 class="panel-title">Directions</h1>
                         </div>

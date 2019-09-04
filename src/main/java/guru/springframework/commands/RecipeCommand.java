@@ -7,7 +7,9 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class RecipeCommand {
@@ -35,10 +37,10 @@ public class RecipeCommand {
 
     @NotBlank
     private String directions;
-    private Set<IngredientCommand> ingredients = new HashSet<>();
+    private List<IngredientCommand> ingredients = new ArrayList<>();
     private Difficulty difficulty;
     private NotesCommand notes;
-    private Set<CategoryCommand> categories = new HashSet<>();
+    private List<CategoryCommand> categories =  new ArrayList<>();
     private Byte[] image;
 
     public String getId() {
@@ -105,11 +107,11 @@ public class RecipeCommand {
         this.directions = directions;
     }
 
-    public Set<IngredientCommand> getIngredients() {
+    public List<IngredientCommand> getIngredients() {
         return ingredients;
     }
 
-    public void setIngredients(Set<IngredientCommand> ingredients) {
+    public void setIngredients(List<IngredientCommand> ingredients) {
         this.ingredients = ingredients;
     }
 
@@ -129,11 +131,11 @@ public class RecipeCommand {
         this.notes = notes;
     }
 
-    public Set<CategoryCommand> getCategories() {
+    public List<CategoryCommand> getCategories() {
         return categories;
     }
 
-    public void setCategories(Set<CategoryCommand> categories) {
+    public void setCategories(List<CategoryCommand> categories) {
         this.categories = categories;
     }
 

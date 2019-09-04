@@ -12,9 +12,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -55,11 +53,11 @@ public class RecipeServiceImplTest {
     public void getRecipesTest() {
 
         Recipe recipe = new Recipe();
-        Set<Recipe> recipesData = new HashSet<>();
+        List<Recipe> recipesData = new ArrayList<>();
         recipesData.add(recipe);
 
         when(recipeRepository.findAll()).thenReturn(recipesData);
-        Set<Recipe> recipes = new HashSet<>();
+        List<Recipe> recipes = new ArrayList<>();
         recipeRepository.findAll().forEach(recipes::add);
 
         assertEquals(recipes.size(), 1);

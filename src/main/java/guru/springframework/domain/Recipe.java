@@ -1,13 +1,20 @@
 package guru.springframework.domain;
 
 import lombok.EqualsAndHashCode;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @EqualsAndHashCode
+@Document
 public class Recipe {
 
+    @Id
     private String id;
     private String description;
     private Integer prepTime;
@@ -17,13 +24,15 @@ public class Recipe {
     private String url;
     private String directions;
     private Difficulty difficulty;
-    private Set<Ingredient> ingredients = new HashSet<>();
+    private List<Ingredient> ingredients = new ArrayList<>();
     private Byte[] image;
     private Notes notes;
-    private Set<Category> categories = new HashSet<>();
+
+    @DBRef
+    private List<Category> categories = new ArrayList<>();
 
     public Recipe addIngredient(Ingredient ingredient){
-        ingredient.setRecipe(this);
+        //ingredient.setRecipe(this);
         this.ingredients.add(ingredient);
         return this;
     }
@@ -100,11 +109,11 @@ public class Recipe {
         this.difficulty = difficulty;
     }
 
-    public Set<Ingredient> getIngredients() {
+    public List<Ingredient> getIngredients() {
         return ingredients;
     }
 
-    public void setIngredients(Set<Ingredient> ingredients) {
+    public void setIngredients(List<Ingredient> ingredients) {
         this.ingredients = ingredients;
     }
 
@@ -124,11 +133,11 @@ public class Recipe {
         this.notes = notes;
     }
 
-    public Set<Category> getCategories() {
+    public List<Category> getCategories() {
         return categories;
     }
 
-    public void setCategories(Set<Category> categories) {
+    public void setCategories(List<Category> categories) {
         this.categories = categories;
     }
 }

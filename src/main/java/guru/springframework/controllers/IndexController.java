@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.List;
 import java.util.Set;
 
 @Controller
@@ -25,7 +26,7 @@ public class IndexController {
     public String getIndexPage(Model model) {
         log.debug("Getting index page");
 
-        Set<Recipe> recipes = recipeService.getRecipes();
+        List<Recipe> recipes = recipeService.getRecipes();
         model.addAttribute("recipes", recipes);
 
         return "index";

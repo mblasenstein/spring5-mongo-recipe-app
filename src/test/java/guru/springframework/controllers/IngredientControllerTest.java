@@ -15,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -85,7 +86,7 @@ public class IngredientControllerTest {
 
         //when
         when(recipeService.findCommandById(anyString())).thenReturn(recipeCommand);
-        when(unitOfMeasureService.listAllUoms()).thenReturn(new HashSet<>());
+        when(unitOfMeasureService.listAllUoms()).thenReturn(new ArrayList<>());
 
         //then
         mockMvc.perform(get("/recipe/1/ingredient/new"))
@@ -105,7 +106,7 @@ public class IngredientControllerTest {
 
         //when
         when(ingredientService.findByRecipeIdAndIngredientId(anyString(), anyString())).thenReturn(ingredientCommand);
-        when(unitOfMeasureService.listAllUoms()).thenReturn(new HashSet<>());
+        when(unitOfMeasureService.listAllUoms()).thenReturn(new ArrayList<>());
 
         //then
         mockMvc.perform(get("/recipe/1/ingredient/2/update"))
