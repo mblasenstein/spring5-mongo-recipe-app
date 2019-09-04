@@ -2,10 +2,10 @@ version: 2 # use CircleCI 2.0
 jobs: # a collection of steps
   build: # runs not using Workflows must have a `build` job as entry point
 
-    working_directory: ~/spring5-recipe-app # directory where steps will run
+    working_directory: ~/spring5-mongo-recipe-app # directory where steps will run
 
     docker: # run the steps with Docker
-#      - image: circleci/openjdk:11-jdk-browsers-legacy # ...with this image as the primary container; this is where all `steps` will run
+#      - image: circleci/openjdk:8-jdk-stretch # ...with this image as the primary container; this is where all `steps` will run
       - image: circleci/openjdk:8-jdk-stretch # ...with this image as the primary container; this is where all `steps` will run
 
     steps: # a collection of executable commands
@@ -14,14 +14,14 @@ jobs: # a collection of steps
 
       - restore_cache: # restore the saved cache after the first run or if `pom.xml` has changed
           # Read about caching dependencies: https://circleci.com/docs/2.0/caching/
-          key: spring5-recipe-app-{{ checksum "pom.xml" }}
+          key: spring5-mongo-recipe-app-{{ checksum "pom.xml" }}
 
       - run: mvn dependency:go-offline # gets the project dependencies
 
       - save_cache: # saves the project dependencies
           paths:
             - ~/.m2
-          key: spring5-recipe-app-{{ checksum "pom.xml" }}
+          key: spring5-mongo-recipe-app-{{ checksum "pom.xml" }}
 
       - run: mvn integration-test cobertura:cobertura # run the unit and integration tests
 
@@ -31,7 +31,7 @@ jobs: # a collection of steps
 
       - store_artifacts: # store the uberjar as an artifact
           # Upload test summary for display in Artifacts: https://circleci.com/docs/2.0/artifacts/
-          path: target/spring5-recipe-app-0.0.1-SNAPSHOT.jar
+          path: target/spring5-mongo-recipe-app-0.0.1-SNAPSHOT.jar
 
       - run:
           name: Send to CodeCov
