@@ -8,14 +8,12 @@ import guru.springframework.domain.Recipe;
 import guru.springframework.repositories.RecipeRepository;
 import guru.springframework.repositories.UnitOfMeasureRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-/**
- * Created by jt on 6/28/17.
- */
-@Slf4j
 @Service
 public class IngredientServiceImpl implements IngredientService {
 
@@ -23,6 +21,7 @@ public class IngredientServiceImpl implements IngredientService {
     private final IngredientToIngredientCommand ingredientToIngredientCommand;
     private final RecipeRepository recipeRepository;
     private final UnitOfMeasureRepository unitOfMeasureRepository;
+    private static Logger log = LoggerFactory.getLogger(IngredientServiceImpl.class);
 
     public IngredientServiceImpl(
             IngredientCommandToIngredient ingredientCommandToIngredient,

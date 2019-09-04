@@ -7,20 +7,20 @@ import guru.springframework.services.IngredientService;
 import guru.springframework.services.RecipeService;
 import guru.springframework.services.UnitOfMeasureService;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-@Slf4j
 @Controller
 public class IngredientController {
 
     private final RecipeService recipeService;
-
     private final IngredientService ingredientService;
-
     private final UnitOfMeasureService unitOfMeasureService;
-
+    private static Logger log = LoggerFactory.getLogger(IngredientController.class);
+    
     public IngredientController(RecipeService recipeService, IngredientService ingredientService, UnitOfMeasureService unitOfMeasureService) {
         this.recipeService = recipeService;
         this.ingredientService = ingredientService;
