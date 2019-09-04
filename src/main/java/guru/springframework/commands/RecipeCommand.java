@@ -2,7 +2,6 @@ package guru.springframework.commands;
 
 import guru.springframework.domain.Difficulty;
 import org.hibernate.validator.constraints.URL;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;

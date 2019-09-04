@@ -5,15 +5,14 @@ import guru.springframework.repositories.CategoryRepository;
 import guru.springframework.repositories.NotesRepository;
 import guru.springframework.repositories.RecipeRepository;
 import guru.springframework.repositories.UnitOfMeasureRepository;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
-import javax.transaction.Transactional;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 @Profile("default")
@@ -33,8 +32,7 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
     }
 
     @Override
-    @Transactional
-    public void onApplicationEvent(ContextRefreshedEvent event) {
+        public void onApplicationEvent(ContextRefreshedEvent event) {
         recipeRepository.save(loadGuacamoleRecipe());
         recipeRepository.save(loadTacoRecipe());
     }
