@@ -2,11 +2,15 @@ version: 2 # use CircleCI 2.0
 jobs: # a collection of steps
   build: # runs not using Workflows must have a `build` job as entry point
 
-    working_directory: ~/spring5-mongo-recipe-app # directory where steps will run
-
     docker: # run the steps with Docker
 #      - image: circleci/openjdk:8-jdk-stretch # ...with this image as the primary container; this is where all `steps` will run
       - image: circleci/openjdk:8-jdk-stretch # ...with this image as the primary container; this is where all `steps` will run
+
+    working_directory: ~/repo # directory where steps will run
+
+    environment:
+      JVM_OPTS: -Xmx3200m
+      TERM: dumb
 
     steps: # a collection of executable commands
 
@@ -16,27 +20,30 @@ jobs: # a collection of steps
           # when lock file changes, use increasingly general patterns to restore cache
           keys:
             # when lock file changes, use increasingly general patterns to restore cache
-            - gradle-repo-v1-{{ .Branch }}-{{ checksum "dependencies.lockfile" }}
-            - gradle-repo-v1-{{ .Branch }}-
-            - gradle-repo-v1-
+            - v1-dependencies-{{ checksum "build.gradle" }}
+            - v1-dependencies-
 
-      - run: mvn dependency:go-offline # gets the project dependencies
+      - run: gradle dependencies # gets the project dependencies
 
       - save_cache: # saves the project dependencies
           paths:
             - ~/.gradle
           key: gradle-repo-v1-{{ .Branch }}-{{ checksum "dependencies.lockfile" }}
 
+      - run: ./gradlew clean test jacocoTestReport
 
-      - run: mvn integration-test cobertura:cobertura # run the unit and integration tests
+      - run:
+          name: Save test results
+          command: |
+            mkdir -p ~/junit
+            find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} ~/junit/ \;
+          when: always
 
-      - store_test_results: # uploads the test metadata from the `target/surefire-reports` directory so that it can show up in the CircleCI dashboard.
-          # Upload test results for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
-          path: target/surefire-reports
+      - store_test_results:
+          path: ~/junit
 
-      - store_artifacts: # store the uberjar as an artifact
-          # Upload test summary for display in Artifacts: https://circleci.com/docs/2.0/artifacts/
-          path: target/spring5-mongo-recipe-app-0.0.1-SNAPSHOT.jar
+      - store_artifacts:
+          path: ~/junit
 
       - run:
           name: Send to CodeCov
