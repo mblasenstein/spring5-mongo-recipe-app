@@ -12,16 +12,21 @@ jobs: # a collection of steps
 
       - checkout # check out source code to working directory
 
-      - restore_cache: # restore the saved cache after the first run or if `pom.xml` has changed
-          # Read about caching dependencies: https://circleci.com/docs/2.0/caching/
-          key: spring5-mongo-recipe-app-{{ checksum "pom.xml" }}
+      - restore_cache:
+          # when lock file changes, use increasingly general patterns to restore cache
+          keys:
+            # when lock file changes, use increasingly general patterns to restore cache
+            - gradle-repo-v1-{{ .Branch }}-{{ checksum "dependencies.lockfile" }}
+            - gradle-repo-v1-{{ .Branch }}-
+            - gradle-repo-v1-
 
       - run: mvn dependency:go-offline # gets the project dependencies
 
       - save_cache: # saves the project dependencies
           paths:
-            - ~/.m2
-          key: spring5-mongo-recipe-app-{{ checksum "pom.xml" }}
+            - ~/.gradle
+          key: gradle-repo-v1-{{ .Branch }}-{{ checksum "dependencies.lockfile" }}
+
 
       - run: mvn integration-test cobertura:cobertura # run the unit and integration tests
 
