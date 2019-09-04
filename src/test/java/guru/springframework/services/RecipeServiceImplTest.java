@@ -38,11 +38,11 @@ public class RecipeServiceImplTest {
     @Test
     public void getRecipeByIdTest() throws Exception {
         Recipe recipe = new Recipe();
-        Long recipeId = 1L;
+        String recipeId = "1";
         recipe.setId(recipeId);
         Optional<Recipe> recipeOptional = Optional.of(recipe);
 
-        when(recipeRepository.findById(anyLong())).thenReturn(recipeOptional);
+        when(recipeRepository.findById(anyString())).thenReturn(recipeOptional);
 
         Recipe recipeReturned = recipeService.findById(recipeId);
 
@@ -70,7 +70,7 @@ public class RecipeServiceImplTest {
     public void deleteRecipeById() {
 
         // given
-        Long idToDelete = 2L;
+        String idToDelete = "2";
 
         // when
         recipeService.deleteById(idToDelete);
