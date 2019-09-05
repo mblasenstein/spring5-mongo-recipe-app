@@ -18,7 +18,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 class CategoryReactiveRepositoryTest {
 
     private static final String TEST = "Test";
-    private static Logger log = LoggerFactory.getLogger(CategoryReactiveRepositoryTest.class);
 
     @Autowired
     CategoryReactiveRepository categoryReactiveRepository;

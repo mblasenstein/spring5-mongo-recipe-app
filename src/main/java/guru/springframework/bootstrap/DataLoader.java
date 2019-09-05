@@ -28,10 +28,6 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
     private CategoryRepository categoryRepository;
     private UnitOfMeasureRepository unitOfMeasureRepository;
 
-    private UnitOfMeasureReactiveRepository uomReactiveRepository;
-    private CategoryReactiveRepository categoryReactiveRepository;
-    private RecipeReactiveRepository recipeReactiveRepository;
-
     private Map<String, UnitOfMeasure> unitsOfMeasure = new HashMap<>();
     private static Logger log = LoggerFactory.getLogger(DataLoader.class);
 
@@ -47,11 +43,6 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
         loadUom();
         recipeRepository.save(loadGuacamoleRecipe());
         recipeRepository.save(loadTacoRecipe());
-        log.error("########################");
-        log.error(String.format("UnitOfMeasure count: %s", uomReactiveRepository.count().block().toString()));
-        log.error(String.format("Category count: %s", categoryReactiveRepository.count().block().toString()));
-        log.error(String.format("Recipe count: %s", recipeReactiveRepository.count().block().toString()));
-        log.error("########################");
         log.debug("Loading Bootstrap data");
     }
 
