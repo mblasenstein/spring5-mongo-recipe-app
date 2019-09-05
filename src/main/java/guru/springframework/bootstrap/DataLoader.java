@@ -5,8 +5,12 @@ import guru.springframework.repositories.CategoryRepository;
 import guru.springframework.repositories.NotesRepository;
 import guru.springframework.repositories.RecipeRepository;
 import guru.springframework.repositories.UnitOfMeasureRepository;
+import guru.springframework.repositories.reactive.CategoryReactiveRepository;
+import guru.springframework.repositories.reactive.RecipeReactiveRepository;
+import guru.springframework.repositories.reactive.UnitOfMeasureReactiveRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -22,15 +26,18 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
 
     private RecipeRepository recipeRepository;
     private CategoryRepository categoryRepository;
-    private NotesRepository notesRepository;
     private UnitOfMeasureRepository unitOfMeasureRepository;
+
+    private UnitOfMeasureReactiveRepository uomReactiveRepository;
+    private CategoryReactiveRepository categoryReactiveRepository;
+    private RecipeReactiveRepository recipeReactiveRepository;
+
     private Map<String, UnitOfMeasure> unitsOfMeasure = new HashMap<>();
     private static Logger log = LoggerFactory.getLogger(DataLoader.class);
 
-    public DataLoader(RecipeRepository recipeRepository, CategoryRepository categoryRepository, NotesRepository notesRepository, UnitOfMeasureRepository unitOfMeasureRepository) {
+    public DataLoader(RecipeRepository recipeRepository, CategoryRepository categoryRepository, UnitOfMeasureRepository unitOfMeasureRepository) {
         this.recipeRepository = recipeRepository;
         this.categoryRepository = categoryRepository;
-        this.notesRepository = notesRepository;
         this.unitOfMeasureRepository = unitOfMeasureRepository;
     }
 
@@ -40,6 +47,11 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
         loadUom();
         recipeRepository.save(loadGuacamoleRecipe());
         recipeRepository.save(loadTacoRecipe());
+        log.error("########################");
+        log.error(String.format("UnitOfMeasure count: %s", uomReactiveRepository.count().block().toString()));
+        log.error(String.format("Category count: %s", categoryReactiveRepository.count().block().toString()));
+        log.error(String.format("Recipe count: %s", recipeReactiveRepository.count().block().toString()));
+        log.error("########################");
         log.debug("Loading Bootstrap data");
     }
 

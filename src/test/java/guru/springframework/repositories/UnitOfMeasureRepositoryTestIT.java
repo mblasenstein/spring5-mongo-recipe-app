@@ -2,6 +2,9 @@ package guru.springframework.repositories;
 
 import guru.springframework.bootstrap.DataLoader;
 import guru.springframework.domain.UnitOfMeasure;
+import guru.springframework.repositories.reactive.CategoryReactiveRepository;
+import guru.springframework.repositories.reactive.RecipeReactiveRepository;
+import guru.springframework.repositories.reactive.UnitOfMeasureReactiveRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,9 +27,6 @@ class UnitOfMeasureRepositoryTestIT {
     CategoryRepository categoryRepository;
 
     @Autowired
-    NotesRepository notesRepository;
-
-    @Autowired
     UnitOfMeasureRepository unitOfMeasureRepository;
 
     @BeforeEach
@@ -34,9 +34,8 @@ class UnitOfMeasureRepositoryTestIT {
         recipeRepository.deleteAll();
         unitOfMeasureRepository.deleteAll();
         categoryRepository.deleteAll();
-        notesRepository.deleteAll();
 
-        DataLoader dataLoader = new DataLoader(recipeRepository, categoryRepository, notesRepository, unitOfMeasureRepository);
+        DataLoader dataLoader = new DataLoader(recipeRepository, categoryRepository, unitOfMeasureRepository);
 
         dataLoader.onApplicationEvent(null);
     }
