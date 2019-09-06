@@ -10,6 +10,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
+import reactor.core.publisher.Flux;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,15 +41,12 @@ public class IndexControllerTest {
     public void testGetIndexPage() {
 
         // given
-        List<Recipe> recipes = new ArrayList<>();
         Recipe recipe1 = new Recipe();
         Recipe recipe2 = new Recipe();
         recipe2.setDescription("Hello");
-        recipes.add(recipe1);
-        recipes.add(recipe2);
 
         // when
-        when(recipeService.getRecipes()).thenReturn(recipes);
+        when(recipeService.getRecipes()).thenReturn(Flux.just(recipe1, recipe2));
 
         ArgumentCaptor<List<Recipe>> argumentCaptor = ArgumentCaptor.forClass(List.class);
 

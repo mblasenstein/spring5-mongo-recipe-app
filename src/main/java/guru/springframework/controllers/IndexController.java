@@ -7,7 +7,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import reactor.core.publisher.Flux;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -26,8 +28,9 @@ public class IndexController {
     public String getIndexPage(Model model) {
         log.debug("Getting index page");
 
-        List<Recipe> recipes = recipeService.getRecipes();
-        model.addAttribute("recipes", recipes);
+        Flux<Recipe> recipes = recipeService.getRecipes();
+        List<Recipe> recipeList = new ArrayList<>();
+        model.addAttribute("recipes", recipes.map(recipeList::add));
 
         return "index";
     }
