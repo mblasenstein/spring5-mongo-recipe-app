@@ -45,20 +45,21 @@ public class IngredientServiceImpl implements IngredientService {
             log.error("recipe id not found. Id: " + recipeId);
         }
 
-       Optional<IngredientCommand> ingredientCommand = recipe
+       Optional<IngredientCommand> ingredientCommandOptional = recipe
                 .getIngredients().stream()
                     .filter(ingredient -> ingredient.getId().equals(ingredientId))
                 .map(ingredientToIngredientCommand::convert)
                 .findFirst();
 
-        if(!ingredientCommand.isPresent()){
+        if(!ingredientCommandOptional.isPresent()){
             //todo impl error handling
             log.error("Ingredient id not found: " + ingredientId);
         }
 
-        //ingredientCommandOptional.get().setRecipeId(recipeId);
+        IngredientCommand ingredientCommand = ingredientCommandOptional.get();
+        ingredientCommand.setRecipeId(recipeId);
 
-        return Mono.just(ingredientCommand.get());
+        return Mono.just(ingredientCommand);
     }
 
     @Override
@@ -112,13 +113,13 @@ public class IngredientServiceImpl implements IngredientService {
 
         // todo check for fail
         IngredientCommand savedIngredientCommand = ingredientToIngredientCommand.convert(savedIngredientOptional.get());
-        //savedIngredientCommand.setRecipeId(recipe.getId());
+        savedIngredientCommand.setRecipeId(recipe.getId());
 
         return Mono.just(savedIngredientCommand);
     }
 
     @Override
-        public void deleteIngredientFromRecipe(String recipeId, String ingredientId) {
+    public Mono<Void> deleteIngredientFromRecipe(String recipeId, String ingredientId) {
         Recipe recipe = recipeReactiveRepository.findById(recipeId).block();
 
         if (recipe != null) {
@@ -134,11 +135,12 @@ public class IngredientServiceImpl implements IngredientService {
                 Ingredient ingredient = ingredientToDelete.get();
                 ingredient.setRecipe(null);
                 recipe.getIngredients().remove(ingredient);
-                recipeReactiveRepository.save(recipe);
+                recipeReactiveRepository.save(recipe).block();
                 log.debug(String.format("Deleted ingredient id %s from recipe id %s", ingredientId, recipeId));
             }
         } else {
             log.debug("Recipe id " + recipeId + " not found");
         }
+        return Mono.empty();
     }
 }

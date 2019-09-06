@@ -28,9 +28,7 @@ public class IndexController {
     public String getIndexPage(Model model) {
         log.debug("Getting index page");
 
-        Flux<Recipe> recipes = recipeService.getRecipes();
-        List<Recipe> recipeList = new ArrayList<>();
-        model.addAttribute("recipes", recipes.map(recipeList::add));
+        model.addAttribute("recipes", recipeService.getRecipes().collectList().block());
 
         return "index";
     }
