@@ -25,8 +25,7 @@ public class Recipe {
     private Byte[] image;
     private Notes notes;
 
-    @DBRef
-    private List<Category> categories = new ArrayList<>();
+        private List<Category> categories = new ArrayList<>();
 
     public Recipe addIngredient(Ingredient ingredient){
         //ingredient.setRecipe(this);
