@@ -3,12 +3,14 @@ package guru.springframework.services;
 import guru.springframework.converters.RecipeCommandToRecipe;
 import guru.springframework.converters.RecipeToRecipeCommand;
 import guru.springframework.domain.Recipe;
-import guru.springframework.repositories.RecipeRepository;
+import guru.springframework.repositories.reactive.RecipeReactiveRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.*;
 
@@ -20,7 +22,7 @@ import static org.springframework.test.util.AssertionErrors.assertNotNull;
 public class RecipeServiceImplTest {
 
     @Mock
-    RecipeRepository recipeRepository;
+    RecipeReactiveRepository recipeReactiveRepository;
 
     @Mock
     RecipeToRecipeCommand recipeToRecipeCommand;
@@ -36,30 +38,24 @@ public class RecipeServiceImplTest {
         Recipe recipe = new Recipe();
         String recipeId = "1";
         recipe.setId(recipeId);
-        Optional<Recipe> recipeOptional = Optional.of(recipe);
+        Mono<Recipe> recipeMono = Mono.just(recipe);
 
-        when(recipeRepository.findById(anyString())).thenReturn(recipeOptional);
+        when(recipeReactiveRepository.findById(anyString())).thenReturn(recipeMono);
 
         Recipe recipeReturned = recipeService.findById(recipeId).block();
 
         assertNotNull("Null recipe returned", recipeReturned);
-        verify(recipeRepository, times(1)).findById(recipeId);
-        verify(recipeRepository, never()).findAll();
+        verify(recipeReactiveRepository, times(1)).findById(recipeId);
+        verify(recipeReactiveRepository, never()).findAll();
     }
 
     @Test
     public void getRecipesTest() {
 
-        Recipe recipe = new Recipe();
-        List<Recipe> recipesData = new ArrayList<>();
-        recipesData.add(recipe);
-
-        when(recipeRepository.findAll()).thenReturn(recipesData);
-        List<Recipe> recipes = new ArrayList<>();
-        recipeRepository.findAll().forEach(recipes::add);
-
+        when(recipeReactiveRepository.findAll()).thenReturn(Flux.just(new Recipe()));
+        List<Recipe> recipes = recipeReactiveRepository.findAll().collectList().block();
         assertEquals(recipes.size(), 1);
-        verify(recipeRepository, times(1)).findAll();
+        verify(recipeReactiveRepository, times(1)).findAll();
     }
 
     @Test
@@ -72,6 +68,6 @@ public class RecipeServiceImplTest {
         recipeService.deleteById(idToDelete);
 
         // then
-        verify(recipeRepository, times(1)).deleteById(idToDelete);
+        verify(recipeReactiveRepository, times(1)).deleteById(idToDelete);
     }
 }

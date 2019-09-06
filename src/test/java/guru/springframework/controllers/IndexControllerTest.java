@@ -4,9 +4,11 @@ import guru.springframework.domain.Recipe;
 import guru.springframework.services.RecipeService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
@@ -21,6 +23,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+@ExtendWith(MockitoExtension.class)
 public class IndexControllerTest {
 
     @Mock
@@ -33,7 +36,6 @@ public class IndexControllerTest {
 
     @BeforeEach
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
         controller = new IndexController(recipeService);
     }
 
@@ -62,8 +64,17 @@ public class IndexControllerTest {
 
     @Test
     public void testMockMVC() throws Exception {
+        // given
+        Recipe recipe1 = new Recipe();
+        Recipe recipe2 = new Recipe();
+        recipe2.setDescription("Hello");
+
+        // when
+        when(recipeService.getRecipes()).thenReturn(Flux.just(recipe1, recipe2));
+
         MockMvc mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
 
+        // then
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("index"));
