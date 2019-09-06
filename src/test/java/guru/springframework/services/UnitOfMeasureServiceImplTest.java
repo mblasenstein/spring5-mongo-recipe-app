@@ -3,12 +3,13 @@ package guru.springframework.services;
 import guru.springframework.commands.UnitOfMeasureCommand;
 import guru.springframework.converters.UnitOfMeasureToUnitOfMeasureCommand;
 import guru.springframework.domain.UnitOfMeasure;
-import guru.springframework.repositories.UnitOfMeasureRepository;
+import guru.springframework.repositories.reactive.UnitOfMeasureReactiveRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import reactor.core.publisher.Flux;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -24,35 +25,32 @@ class UnitOfMeasureServiceImplTest {
     UnitOfMeasureToUnitOfMeasureCommand unitOfMeasureToUnitOfMeasureCommand = new UnitOfMeasureToUnitOfMeasureCommand();
 
     @Mock
-    UnitOfMeasureRepository unitOfMeasureRepository;
+    UnitOfMeasureReactiveRepository unitOfMeasureReactiveRepository;
 
     UnitOfMeasureService service;
 
     @BeforeEach
     public void setUp() {
-        service = new UnitOfMeasureServiceImpl(unitOfMeasureRepository, unitOfMeasureToUnitOfMeasureCommand);
+        service = new UnitOfMeasureServiceImpl(unitOfMeasureReactiveRepository, unitOfMeasureToUnitOfMeasureCommand);
     }
 
     @Test
     void listAllUoms() {
 
         // given
-        List<UnitOfMeasure> unitOfMeasures= new ArrayList<>();
         UnitOfMeasure uom1 = new UnitOfMeasure();
         uom1.setId("1");
-        unitOfMeasures.add(uom1);
 
         UnitOfMeasure uom2 = new UnitOfMeasure();
         uom2.setId("2");
-        unitOfMeasures.add(uom2);
 
-        when(unitOfMeasureRepository.findAll()).thenReturn(unitOfMeasures);
+        when(unitOfMeasureReactiveRepository.findAll()).thenReturn(Flux.just(uom1, uom2));
 
         // when
-        List<UnitOfMeasureCommand> uomList = service.listAllUoms();
+        List<UnitOfMeasureCommand> uomList = service.listAllUoms().collectList().block();
 
         // then
         assertEquals(2, uomList.size());
-        verify(unitOfMeasureRepository, times(1)).findAll();
+        verify(unitOfMeasureReactiveRepository, times(1)).findAll();
     }
 }
