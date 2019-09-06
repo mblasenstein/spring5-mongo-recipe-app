@@ -30,7 +30,9 @@ public class RecipeServiceImpl implements RecipeService {
 
     public Flux<Recipe> getRecipes() {
         
-        return recipeReactiveRepository.findAll();
+        Flux<Recipe> r = recipeReactiveRepository.findAll();
+
+        return r;
     }
 
     @Override
