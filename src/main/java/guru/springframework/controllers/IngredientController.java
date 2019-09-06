@@ -33,7 +33,7 @@ public class IngredientController {
         log.debug(String.format("Getting ingredient list for recipe ID %s", id));
 
         // use command object to avoid lazy load errors in Thymeleaf
-        model.addAttribute("recipe", recipeService.findCommandById(id).block());
+        model.addAttribute("recipe", recipeService.findCommandById(id));
 
         return "recipe/ingredient/list";
     }
@@ -64,7 +64,7 @@ public class IngredientController {
         ingredientCommand.setUnitOfMeasure(new UnitOfMeasureCommand());
         model.addAttribute("ingredient", ingredientCommand);
 
-        model.addAttribute("uomList",  unitOfMeasureService.listAllUoms().collectList().block());
+        model.addAttribute("uomList",  unitOfMeasureService.listAllUoms());
 
         return "recipe/ingredient/ingredientform";
     }
@@ -72,8 +72,8 @@ public class IngredientController {
     @GetMapping
     @RequestMapping("recipe/{recipeId}/ingredient/{ingredientId}/update")
     public String updateRecipeIngredient(@PathVariable String recipeId, @PathVariable String ingredientId, Model model) {
-        model.addAttribute("ingredient", ingredientService.findByRecipeIdAndIngredientId(recipeId, ingredientId).block());
-        model.addAttribute("uomList", unitOfMeasureService.listAllUoms().collectList().block());
+        model.addAttribute("ingredient", ingredientService.findByRecipeIdAndIngredientId(recipeId, ingredientId));
+        model.addAttribute("uomList", unitOfMeasureService.listAllUoms().collectList());
 
         return "recipe/ingredient/ingredientform";
     }

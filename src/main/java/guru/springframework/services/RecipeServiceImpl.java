@@ -30,9 +30,7 @@ public class RecipeServiceImpl implements RecipeService {
 
     public Flux<Recipe> getRecipes() {
         
-        Flux<Recipe> r = recipeReactiveRepository.findAll();
-
-        return r;
+        return recipeReactiveRepository.findAll();
     }
 
     @Override
@@ -45,18 +43,16 @@ public class RecipeServiceImpl implements RecipeService {
     public Mono<RecipeCommand> saveRecipeCommand(RecipeCommand command) {
 
         Mono<Recipe> savedRecipe = recipeReactiveRepository.save(recipeCommandToRecipe.convert(command));
-        Recipe recipe = savedRecipe.block();
-        if (recipe != null) {
-            log.debug("Saved RecipeId:" + recipe.getId());
-            return Mono.just(Objects.requireNonNull(recipeToRecipeCommand.convert(recipe)));
+        if (savedRecipe != null) {
+            log.debug("Saved RecipeId:" + savedRecipe.map(Recipe::getId));
+            return recipeToRecipeCommand.convert(savedRecipe);
         }
         throw new RuntimeException("RecipeCommand failed to save");
     }
 
     @Override
     public Mono<RecipeCommand> findCommandById(String id) {
-        RecipeCommand command = recipeToRecipeCommand.convert(findById(id).block());
-        return Mono.just(command);
+        return recipeToRecipeCommand.convert(findById(id));
     }
 
     @Override
