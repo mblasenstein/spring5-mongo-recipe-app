@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Mono;
 
 @Controller
 public class IngredientController {
@@ -43,7 +44,7 @@ public class IngredientController {
     public String showIngredientByRecipeIdAndIngredientId(@PathVariable String recipeId, @PathVariable String ingredientId, Model model) {
         log.debug(String.format("Getting ingredient id %s for recipe id %s", ingredientId, recipeId));
 
-        model.addAttribute("ingredient", ingredientService.findByRecipeIdAndIngredientId(recipeId, ingredientId).block());
+        model.addAttribute("ingredient", ingredientService.findByRecipeIdAndIngredientId(recipeId, ingredientId));
 
         return "recipe/ingredient/show";
     }
@@ -54,7 +55,7 @@ public class IngredientController {
     public String newIngredient(@PathVariable String recipeId, Model model){
 
         //make sure we have a good id value
-        RecipeCommand recipeCommand = recipeService.findCommandById(recipeId).block();
+        Mono<RecipeCommand> recipeCommand = recipeService.findCommandById(recipeId);
         //todo raise exception if null
 
         //need to return back parent id for hidden form property
