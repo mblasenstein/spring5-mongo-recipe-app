@@ -3,6 +3,9 @@ package guru.springframework.domain;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.UUID;
 
@@ -10,10 +13,15 @@ public class Ingredient {
 
     @Id
     private String id = UUID.randomUUID().toString();
+
+    @NotBlank
     private String description;
+
+    @NotNull
+    @Min(1)
     private BigDecimal amount;
 
-        private UnitOfMeasure uom;
+    private UnitOfMeasure uom;
     private Recipe recipe;
 
     public String getId() {

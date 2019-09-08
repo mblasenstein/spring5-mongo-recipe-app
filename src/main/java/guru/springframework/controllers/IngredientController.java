@@ -11,6 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
 
@@ -20,12 +22,18 @@ public class IngredientController {
     private final RecipeService recipeService;
     private final IngredientService ingredientService;
     private final UnitOfMeasureService unitOfMeasureService;
+    private WebDataBinder binder;
     private static Logger log = LoggerFactory.getLogger(IngredientController.class);
     
     public IngredientController(RecipeService recipeService, IngredientService ingredientService, UnitOfMeasureService unitOfMeasureService) {
         this.recipeService = recipeService;
         this.ingredientService = ingredientService;
         this.unitOfMeasureService = unitOfMeasureService;
+    }
+
+    @InitBinder("ingredient")
+    public void bindIngredientData(WebDataBinder binder) {
+        this.binder = binder;
     }
 
     @GetMapping
@@ -82,12 +90,24 @@ public class IngredientController {
     @PostMapping
     @RequestMapping("recipe/{recipeId}/ingredient")
     public String saveOrUpdate(@PathVariable String recipeId, @ModelAttribute IngredientCommand command) {
+
+        binder.validate();
+        BindingResult result = binder.getBindingResult();
+
+        if (result.hasErrors()) {
+            result.getAllErrors().forEach(objectError -> {
+                log.debug(objectError.toString());
+            });
+            return String.format("redirect:/`recipe/%s/ingredient/%s/update", recipeId, command.getId());
+        }
+
         IngredientCommand savedCommand = ingredientService.saveIngredientCommand(command).block();
 
-        log.debug(String.format("saved recipe id: %s", savedCommand.getRecipeId()));
+        log.debug(String.format("saved recipe id: %s", recipeId));
         log.debug(String.format("saved ingredient id: %s", savedCommand.getId()));
 
-        return "redirect:/recipe/" + savedCommand.getRecipeId() + "/ingredient/" + savedCommand.getId();
+        //return "redirect:/recipe/" + recipeId + "/ingredient/" + savedCommand.getId();
+        return "recipe/ingredient/ingredientform";
     }
 
     @GetMapping

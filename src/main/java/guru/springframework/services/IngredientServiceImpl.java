@@ -44,6 +44,7 @@ public class IngredientServiceImpl implements IngredientService {
                 .single()
                 .map(ingredient -> {
                     IngredientCommand command = ingredientToIngredientCommand.convert(ingredient);
+                    command.setRecipeId(recipeId);
                     return command;
                 });
     }
