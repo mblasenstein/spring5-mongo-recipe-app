@@ -77,48 +77,6 @@ public class IngredientServiceImpl implements IngredientService {
                     .flatMap(recipeReactiveRepository::save)
                     .subscribe();
         }
-//
-//        recipe
-//                .map(recipeReactiveRepository::delete);
-//        recipeReactiveRepository.deleteById(command.getRecipeId());
-        Mono<Recipe> r2 = recipeReactiveRepository.findById(command.getRecipeId());
-        if (r2 == null) {
-            log.error("NULL!!!");
-        }
-
-//        if (existingIngredient != null) {
-//
-//            recipe
-//                    .map(r -> {
-//                        existingIngredient
-//                                .map(existing -> {
-//                                    r.getIngredients().remove(existing);
-//
-//                                    existing.setDescription(command.getDescription());
-//                                    existing.setAmount(command.getAmount());
-//
-//                                    if (command.getUnitOfMeasure() != null) {
-//                                        Optional<UnitOfMeasure> newUom = unitOfMeasureReactiveRepository.findAll()
-//                                                .toStream()
-//                                                .filter(uom -> uom.getId().equals(command.getUnitOfMeasure().getId()))
-//                                                .findFirst();
-//                                        existing.setUom(newUom.orElse(null));
-//                                    }
-//
-//                                    recipeReactiveRepository.delete(r).then(recipeReactiveRepository.save(r.addIngredient(existing)));
-//
-//                                    return existing;
-//                                });
-//
-//                        return r;
-//                    });
-//
-//
-//        } else {
-//            recipe
-//                    .map(r -> r.addIngredient(ingredientCommandToIngredient.convert(command)))
-//                    .single();
-//        }
 
         return Mono.just(command);
     }
