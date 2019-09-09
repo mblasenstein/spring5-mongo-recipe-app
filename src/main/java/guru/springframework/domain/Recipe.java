@@ -33,6 +33,14 @@ public class Recipe {
         return this;
     }
 
+    public Recipe removeIngredientById(String id) {
+        Optional<Ingredient> ingredientToRemove = this.getIngredients().stream()
+                .filter(ingredient -> ingredient.getId().equals(id))
+                .findFirst();
+        this.getIngredients().remove(ingredientToRemove.orElse(null));
+        return this;
+    }
+
     public String getId() {
         return id;
     }

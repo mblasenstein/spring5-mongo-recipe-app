@@ -13,14 +13,8 @@ public class Ingredient {
 
     @Id
     private String id = UUID.randomUUID().toString();
-
-    @NotBlank
     private String description;
-
-    @NotNull
-    @Min(1)
     private BigDecimal amount;
-
     private UnitOfMeasure uom;
     private Recipe recipe;
 

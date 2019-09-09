@@ -3,6 +3,8 @@ package guru.springframework.controllers;
 import guru.springframework.commands.IngredientCommand;
 import guru.springframework.commands.RecipeCommand;
 import guru.springframework.commands.UnitOfMeasureCommand;
+import guru.springframework.domain.Ingredient;
+import guru.springframework.domain.UnitOfMeasure;
 import guru.springframework.services.IngredientService;
 import guru.springframework.services.RecipeService;
 import guru.springframework.services.UnitOfMeasureService;
@@ -14,7 +16,10 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.Optional;
 
 @Controller
 public class IngredientController {
@@ -89,7 +94,17 @@ public class IngredientController {
 
     @PostMapping
     @RequestMapping("recipe/{recipeId}/ingredient")
-    public String saveOrUpdate(@PathVariable String recipeId, @ModelAttribute IngredientCommand command) {
+    public String saveOrUpdate(@ModelAttribute("ingredient") IngredientCommand command, @PathVariable String recipeId, Model model) {
+
+        Flux<UnitOfMeasureCommand> uomList = this.unitOfMeasureService.listAllUoms();
+        model.addAttribute("uomList", uomList);
+
+        final String uomDesc = null;
+
+        uomList
+                .filter(uom -> uom.getId().equals(command.getUnitOfMeasure().getId()))
+                .doOnNext(uom -> command.getUnitOfMeasure().setDescription(uom.getDescription()))
+                .subscribe();
 
         binder.validate();
         BindingResult result = binder.getBindingResult();
@@ -98,16 +113,17 @@ public class IngredientController {
             result.getAllErrors().forEach(objectError -> {
                 log.debug(objectError.toString());
             });
-            return String.format("redirect:/`recipe/%s/ingredient/%s/update", recipeId, command.getId());
+            return "recipe/ingredient/ingredientform";
+            //return String.format("recipe/%s/ingredient/%s/update", recipeId, command.getId());
         }
 
-        IngredientCommand savedCommand = ingredientService.saveIngredientCommand(command).block();
+        ingredientService.saveIngredientCommand(command);
 
         log.debug(String.format("saved recipe id: %s", recipeId));
-        log.debug(String.format("saved ingredient id: %s", savedCommand.getId()));
+        log.debug(String.format("saved ingredient id: %s", command.getId()));
 
         //return "redirect:/recipe/" + recipeId + "/ingredient/" + savedCommand.getId();
-        return "recipe/ingredient/ingredientform";
+        return "redirect:/recipe/" + recipeId + "/ingredients";
     }
 
     @GetMapping

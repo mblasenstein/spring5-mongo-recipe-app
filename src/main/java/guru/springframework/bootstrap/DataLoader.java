@@ -97,7 +97,7 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
         uom8.setDescription("Dash");
         unitOfMeasureRepository.save(uom8);
     }
-    
+
     private UnitOfMeasure getUom(String description) {
         if (unitsOfMeasure.size() == 0) {
             Iterable<UnitOfMeasure> uoms = unitOfMeasureRepository.findAll();
@@ -117,19 +117,19 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
         avocados.setUom(getUom("Each"));
         avocados.setDescription("avocados");
         recipe.getIngredients().add(avocados);
-        
+
         Ingredient salt = new Ingredient();
         salt.setAmount(BigDecimal.valueOf(.5));
         salt.setUom(getUom("Teaspoon"));
         salt.setDescription("kosher salt");
         recipe.getIngredients().add(salt);
-        
+
         Ingredient juice = new Ingredient();
         juice.setAmount(BigDecimal.valueOf(1));
         juice.setUom(getUom("Tablespoon"));
         juice.setDescription("fresh lime or lemon juice");
         recipe.getIngredients().add(juice);
-        
+
         Ingredient onion = new Ingredient();
         onion.setAmount(BigDecimal.valueOf(2));
         onion.setUom(getUom("Tablespoon"));
@@ -141,25 +141,25 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
         chiles.setUom(getUom("Each"));
         chiles.setDescription("serrano chiles, stems and seeds removed, minced");
         recipe.getIngredients().add(chiles);
-        
+
         Ingredient cilantro = new Ingredient();
         cilantro.setAmount(BigDecimal.valueOf(2));
         cilantro.setUom(getUom("Tablespoon"));
         cilantro.setDescription("cilantro (leaves and tender stems), finely chopped");
         recipe.getIngredients().add(cilantro);
-        
+
         Ingredient pepper = new Ingredient();
         pepper.setAmount(BigDecimal.valueOf(1));
         pepper.setUom(getUom("Dash"));
         pepper.setDescription("freshly ground pepper");
         recipe.getIngredients().add(pepper);
-        
+
         Ingredient tomato = new Ingredient();
         tomato.setAmount(BigDecimal.valueOf(.5));
         tomato.setUom(getUom("Each"));
         tomato.setDescription("tomato, seeds and pulp removed, chopped");
         recipe.getIngredients().add(tomato);
-        
+
         recipe.setDirections(
                 "1 Cut avocado, remove flesh: Cut the avocados in half. Remove seed. Score the inside of the avocado with a blunt knife and scoop out the flesh with a spoon. (See How to Cut and Peel an Avocado.) Place in a bowl.\n" +
                         "\n" +
@@ -214,13 +214,13 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
         chiliPowder.setUom(getUom("Tablespoon"));
         chiliPowder.setDescription("ancho chili powder");
         recipe.getIngredients().add(chiliPowder);
-        
+
         Ingredient oregano = new Ingredient();
         oregano.setAmount(BigDecimal.valueOf(1));
         oregano.setUom(getUom("Teaspoon"));
         oregano.setDescription("dried oregano");
         recipe.getIngredients().add(oregano);
-        
+
         Ingredient cumin = new Ingredient();
         cumin.setAmount(BigDecimal.valueOf(1));
         cumin.setUom(getUom("Teaspoon"));
@@ -232,7 +232,7 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
         sugar.setUom(getUom("Teaspoon"));
         sugar.setDescription("sugar");
         recipe.getIngredients().add(sugar);
-        
+
         Ingredient salt = new Ingredient();
         salt.setAmount(BigDecimal.valueOf(.5));
         salt.setUom(getUom("Teaspoon"));
@@ -310,7 +310,7 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
         cilantro.setUom(getUom("Each"));
         cilantro.setDescription("Roughly chopped cilantro");
         recipe.getIngredients().add(cilantro);
-        
+
         Ingredient sourCream = new Ingredient();
         sourCream.setAmount(BigDecimal.valueOf(.5));
         sourCream.setUom(getUom("Cup"));
